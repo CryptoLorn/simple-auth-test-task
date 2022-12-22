@@ -93,7 +93,7 @@ const userMiddleware = {
         }
     },
 
-    token: async (req, res, next) => {
+    findToken: async (req, res, next) => {
         try {
             const {id} = req.body;
 

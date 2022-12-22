@@ -7,9 +7,7 @@ const {userMiddleware} = require('../middlewares/user.middleware');
 router.post('/signin',
     userMiddleware.checkIsBodyValid,
     userMiddleware.checkIsUserPresent,
-    userMiddleware.token,
-    // userMiddleware.checkIsAuth,
-    // userMiddleware.checkIsTokenBelongToUser,
+    userMiddleware.findToken,
     userController.login
 );
 router.post('/signup',
