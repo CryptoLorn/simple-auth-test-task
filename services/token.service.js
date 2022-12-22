@@ -49,6 +49,10 @@ const tokenService = {
         } else {
             await Token.destroy({where: {token}});
         }
+    },
+
+    findOne: (id) => {
+        return Token.findOne({where: {userId: id}});
     }
 };
 

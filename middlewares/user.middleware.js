@@ -63,28 +63,6 @@ const userMiddleware = {
         }
     },
 
-    checkIsTokenBelongToUser: async (req, res, next) => {
-        try {
-            const {id} = req.body;
-            const tokenData = req.tokenData;
-
-            const user = await userService.findById(id);
-
-            if (!user) {
-                return next(ApiError.badRequest('Not found user with this id'));
-            }
-
-            if (tokenData.id !== user.id) {
-                return next(ApiError.badRequest('Token not valid for this user'));
-            }
-
-            req.user = user;
-            next();
-        } catch (e) {
-            return next(ApiError.badRequest('Token not valid for this user'));
-        }
-    },
-
     refreshToken: async (req, res, next) => {
         try {
             const tokenData = req.tokenData;
@@ -92,6 +70,40 @@ const userMiddleware = {
             const token = tokenService.generateJwt({id: tokenData.id});
             await tokenService.saveToken({...token, userId: tokenData.id});
 
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkIsUserPresent: async (req, res, next) => {
+        try {
+            const {id} = req.body;
+
+            const user = await userService.findById(id);
+
+            if (!user) {
+                return next(ApiError.badRequest('Not found user with this id'));
+            }
+
+            req.user = user;
+            next();
+        } catch (e) {
+            return next(ApiError.badRequest('Not found user with this id'));
+        }
+    },
+
+    token: async (req, res, next) => {
+        try {
+            const {id} = req.body;
+
+            const token = await tokenService.findOne(id);
+
+            if (!token) {
+                return next(ApiError.badRequest('Not found token for this user'));
+            }
+
+            req.token = token;
             next();
         } catch (e) {
             next(e);

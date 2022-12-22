@@ -20,10 +20,11 @@ const userController = {
         try {
             const {password} = req.body;
             const user = req.user;
+            const token = req.token;
 
             await tokenService.comparePassword(password, user.password);
 
-            return res.json(user);
+            return res.json(token);
         } catch (e) {
             next(e);
         }
