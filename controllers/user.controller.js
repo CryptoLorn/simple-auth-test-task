@@ -24,7 +24,7 @@ const userController = {
 
             await tokenService.comparePassword(password, user.password);
 
-            return res.json(token);
+            return res.json({token});
         } catch (e) {
             next(e);
         }

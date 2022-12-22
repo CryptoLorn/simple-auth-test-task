@@ -97,13 +97,19 @@ const userMiddleware = {
         try {
             const {id} = req.body;
 
-            const token = await tokenService.findOne(id);
+            const tokenData = await tokenService.findOne(id);
 
-            if (!token) {
-                return next(ApiError.badRequest('Not found token for this user'));
+            if (!tokenData) {
+                return next(ApiError.badRequest('Unauthorized'));
             }
 
-            req.token = token;
+            const validToken = await tokenService.checkIsTokenValid(tokenData.token);
+
+            if (!validToken) {
+                return next(ApiError.badRequest('Unauthorized'));
+            }
+
+            req.token = tokenData.token;
             next();
         } catch (e) {
             next(e);
